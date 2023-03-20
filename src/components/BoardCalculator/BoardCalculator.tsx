@@ -3,26 +3,39 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
+import { evaluate } from 'mathjs';
+import { useSelector, useDispatch } from 'react-redux';
 
 import CustomLabel from '../CustomLabel/CustomLabel';
 import CustomButton from '../CustomButton/CustomButton';
 
-import { evaluate } from 'mathjs';
+import { setResult, resetResult, setResultEntry, deleteResultEntry, removeAllResultEntries } from '../../redux/ResultSlice';
+import { setInput, resetInput, setInputEntry, deleteInputEntry, removeAllInputEntries } from '../../redux/InputSlice';
+import { RootState } from '../../store/store';
 
 const BoardCalculator = () => {
 
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState('');
+  const result = useSelector((state: RootState) => state.result.value)
+  const input = useSelector((state: RootState) => state.input.value)
+  const resultEntry = useSelector((state: RootState) => state.result.resultEntry)
+  const inputEntry = useSelector((state: RootState) => state.input.inputEntry)
+  const dispatch = useDispatch()
+
   const [showError, setShowError] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+
   const handleClick = (isExpression: boolean, label: string, value: number | string) => {
     if (isExpression) {
-      setInput(input + label + '(');
-      setResult(result + value + '(');
+      dispatch(setInputEntry(label + '('))
+      dispatch(setResultEntry(value + '('))
+      dispatch(setInput(label + '('))
+      dispatch(setResult(value + '('))
     } else {
-      setInput(input + label);
-      setResult(result + value);
+      dispatch(setInputEntry(label))
+      dispatch(setResultEntry(value + ''))
+      dispatch(setInput(label))
+      dispatch(setResult(value + ''))
     }
   }
 
@@ -30,26 +43,38 @@ const BoardCalculator = () => {
     if (input) {
       try {
         const response = evaluate(result);
-        setResult(response);
-        setInput('');
+        dispatch(resetResult())
+        dispatch(resetInput())
+        dispatch(setResult(response))
+        dispatch(removeAllInputEntries())
+        dispatch(removeAllResultEntries())
         setIsButtonDisabled(true)
       } catch (error) {
         setShowError(true)
-        setInput('Syntax ERROR');
+        dispatch(resetInput())
+        dispatch(resetResult())
+        dispatch(removeAllInputEntries())
+        dispatch(removeAllResultEntries())
+        dispatch(setInput('Syntax ERROR'))
       }
     } else {
       setShowError(true)
-      setInput('Syntax ERROR');
+      dispatch(resetInput())
+      dispatch(resetResult())
+      dispatch(setInput('Syntax ERROR'))
     }
   }
 
   const removeLastPosition = () => {
-    setInput(input.slice(0, -1));
+    dispatch(deleteResultEntry())
+    dispatch(deleteInputEntry())
   }
 
   const resetValues = () => {
-    setInput('');
-    setResult('');
+    dispatch(resetInput())
+    dispatch(resetResult())
+    dispatch(removeAllInputEntries())
+    dispatch(removeAllResultEntries())
     setShowError(false)
     setIsButtonDisabled(false)
   }
