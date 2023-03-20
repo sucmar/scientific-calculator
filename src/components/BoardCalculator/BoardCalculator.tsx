@@ -143,6 +143,7 @@ const BoardCalculator = () => {
   return (
     <Box sx={{ minWidth: 400, maxWidth: 200 }}>
       <Card elevation={3} style={{ backgroundColor: '#CFD8DC' }}>{card}</Card>
+      <p style={{ textAlign: 'center', color: '#BDBDBD'}}>by Marco Antonio Baltazar Santos</p>
     </Box>
   );
 }

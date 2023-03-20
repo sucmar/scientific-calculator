@@ -11,12 +11,7 @@ email: mabsbaltazar@gmail.com
 * The project is a Scientific Calculator, created using react, vite, typescript, redux, mathjs and mui
 
 ## Deploy
-The app has been deployed using github pages
-
-```sh
-https://sucmar.github.io/scientific-calculator/
-```
-
+The app has been deployed using github pages, click here  [scientific-calculator](https://sucmar.github.io/scientific-calculator/)
 
 ## Repository
 
